@@ -1,0 +1,16 @@
+$#include "export.h"
+
+module mysql
+{
+    int connect_mysql(const char* host, const char* user, const char* password, const char* dbname, unsigned int port);
+    				  
+    int query(const char* sql);		
+}
+
+module log
+{
+    void error(const char* msg);
+    void info(const char* msg);
+    void debug(const char* msg);
+}
+

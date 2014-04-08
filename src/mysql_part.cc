@@ -1,12 +1,12 @@
 #include "mysql_part.h"
 #include "log.h"
-#include "interface_c.h"
+#include "export.h"
 
 extern "C"
 {
-    #include <lua.h>
-    #include <lualib.h>
-    #include <lauxlib.h>
+#include <lua.h>
+#include <lualib.h>
+#include <lauxlib.h>
 }
 
 
@@ -74,7 +74,7 @@ CMysql::query(const char* sql)
             lua_rawset(L, -3); 
         }
 
-        lua_setglobal(L, MYSQL_RESULT_SET);        
+        lua_setglobal(L, MYSQL_RESULT);        
 		return 0;
 	}
 	m_strError = mysql_store->What();
