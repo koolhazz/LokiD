@@ -1,19 +1,21 @@
 require("lua/flag")
 
-local db = require("lua/db")
-local redis_ffi = require("lib/redis_ffi")
-local logger = require("lua/logger")
-local config = require("lua/config")
-local stdlib = require("lib/stdlib")
+local db = 			require("lua/db")
+local redis_ffi = 	require("lib/redis_ffi")
+local logger = 		require("lua/logger")
+local config = 		require("lua/config")
+local stdlib = 		require("lib/stdlib")
 
 local mysql = mysql
 local G = _G
 local log = log
 local table = table
-
+local insert = table.insert
+local concat = table.concat
 
 local __redis = nil
 
+-- cache中获取用户的宝石数量
 local function __GetUserGem(in_n_userid)
 	if __redis then
 		if __redis.IsAlived() then
@@ -28,20 +30,21 @@ local function __GetUserGem(in_n_userid)
 	return 0
 end
 
-local function __writeUserGem(in_n_userid, in_n_gem)
-	local __sql = {"call p_upd_UserGem("}
+-- 回写用户宝石记录到数据库中
+local function __WriteUserGem(in_n_userid, in_n_gem)
+	local __sql = {"call p_upd_user_gem("}
 
-	table.insert(__sql, in_n_userid)
-	table.insert(__sql, ", "..in_n_gem)
-	table.insert(__sql, ")")
+	insert(__sql, in_n_userid)
+	insert(__sql, ", "..in_n_gem)
+	insert(__sql, ")")
 
-	local __temp = table.concat(__sql, nil)
+	local __temp = concat(__sql, nil)
 	logger.debug("SQL: "..__temp)
 
 	db.query(__temp)
 end
 
-
+-- 处理逻辑开始处理
 local function __start()
 	__redis = redis_ffi.RedisFFI:NEW()
 
@@ -57,7 +60,7 @@ local function __start()
 				logger.debug("gem: "..__gem)
 
 				if __gem > 0 then
-					-- __WriteUserGem(__result, __gem)			
+					__WriteUserGem(__result, __gem)			
 				end	
 			else
 				logger.error("no UserID")
@@ -71,7 +74,7 @@ function start()
     log.debug("hall connect success.")
   
     if -1 == db.connect_mysql_svr() then
-    	log.debug("mysql connect failed.")
+    	log.error("mysql connect failed.")
         return -1
     else
     	log.debug("mysql connect success.")

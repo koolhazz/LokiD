@@ -3,7 +3,7 @@ module(..., package.seeall)
 local log = log
 local G = _G
 
-local __level = 3 -- 当前日志级别
+local __level = 3 -- 鏃ュ織绾у埆
 
 function debug(in_s_msg)
 	if __level < G["g_t_log_level"].DEBUG then
