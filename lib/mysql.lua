@@ -1,8 +1,8 @@
 module(..., package.seeall)
 
-local ffi = require'ffi'
-local bit = require'bit'
-require("mysql_h")
+local ffi = require("ffi")
+local bit = require("lib/bit")
+require("lib/mysql_h")
 local mysqlclient = ffi.load("mysqlclient")
 
 --we compare NULL pointers against NULL instead of nil for compatibility with luaffi.

@@ -71,8 +71,6 @@ local function __start()
 end
 
 function start()
-    log.debug("hall connect success.")
-  
 	__mysql = connect()
 
 	if __mysql then
@@ -107,7 +105,7 @@ function dump(in_b_flag)
 end
 
 function connect()
-	return mysql.connect(config.MYSQL_CONF.m_host, config.MYSQL_CONF.m_user, nil, 'kslave', 'utf8', 3388)
+	return mysql.connect(config.MYSQL_CONF.m_host, config.MYSQL_CONF.m_user, nil, config.MYSQL_CONF.m_db, 'utf8', 3388)
 end
 
 
