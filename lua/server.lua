@@ -63,7 +63,6 @@ local function __start()
 					__WriteUserGem(__result, __gem)			
 				end	
 			else
-				logger.error("no UserID")
 				stdlib.sleep(1)	
 			end
 		end
