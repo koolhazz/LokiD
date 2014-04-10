@@ -10,11 +10,9 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -Wall ")  # 设置 cxx编译选�
 
 set(SRC 
 	src/call.c
-	src/connectpool.cc
 	src/export.cc
 	src/log.cc
 	src/main.cc
-	src/mysql_part.cc
 	src/export_lua.cc
 )
 

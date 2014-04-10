@@ -1,12 +1,11 @@
 require("lua/flag")
 
-local db = 			require("lua/db")
+local mysql = 		require("lib/mysql")
 local redis_ffi = 	require("lib/redis_ffi")
 local logger = 		require("lua/logger")
 local config = 		require("lua/config")
 local stdlib = 		require("lib/stdlib")
 
-local mysql = mysql
 local G = _G
 local log = log
 local table = table
@@ -14,6 +13,7 @@ local insert = table.insert
 local concat = table.concat
 
 local __redis = nil
+local __mysql = nil
 
 -- cache中获取用户的宝石数量
 local function __GetUserGem(in_n_userid)
@@ -41,7 +41,7 @@ local function __WriteUserGem(in_n_userid, in_n_gem)
 	local __temp = concat(__sql, nil)
 	logger.debug("SQL: "..__temp)
 
-	db.query(__temp)
+	call(__mysql, __temp)
 end
 
 -- 处理逻辑开始处理
@@ -73,13 +73,14 @@ end
 function start()
     log.debug("hall connect success.")
   
-    if -1 == db.connect_mysql_svr() then
-    	log.error("mysql connect failed.")
-        return -1
-    else
-    	log.debug("mysql connect success.")
-    end
-	
+	__mysql = connect()
+
+	if __mysql then
+		log.debug("mysql connect success.")
+	else
+		log.error("mysql connect failed.")
+	end
+
 	dump(false)
 
 	log.info("Server init success")
@@ -103,5 +104,18 @@ function dump(in_b_flag)
 		local dump = require("jit.v")
 		dump.on("jit.log")
 	end
+end
+
+function connect()
+	return mysql.connect(config.MYSQL_CONF.m_host, config.MYSQL_CONF.m_user, nil, 'kslave', 'utf8', 3388)
+end
+
+
+function query(in_t_mysql, in_s_sql)
+	
+end
+
+function call(in_t_mysql, in_s_sql)
+	in_t_mysql:query(in_s_sql)
 end
 

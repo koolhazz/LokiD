@@ -1,6 +1,5 @@
 #include "tolua++.h"
 #include "log.h"
-#include "mysql_part.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,7 +24,6 @@ TOLUA_API int
 tolua_export_open(lua_State* tolua_S);
 
 lua_State		*L;
-CMysql 			mysql_handle;
 
 static void 
 __binding_cpu(void)
