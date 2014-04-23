@@ -5,10 +5,10 @@
 
 extern int 
 connect_mysql(const char* host, 
-				  const char* user, 
-				  const char* password, 
-				  const char* dbname, 
-				  unsigned int port);
+			  const char* user, 
+			  const char* password, 
+			  const char* dbname, 
+			  unsigned int port);
 				  
 extern int 
 query(const char* mysql);
