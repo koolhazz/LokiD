@@ -17,6 +17,7 @@ extern "C"
 #include <lualib.h>
 #include <lauxlib.h>
 #include "call.h" 
+#include "worker.h"
 }
 
 /* Exported function */
@@ -24,6 +25,7 @@ TOLUA_API int
 tolua_export_open(lua_State* tolua_S);
 
 lua_State		*L;
+worker_pool_t	*pool;
 
 static void 
 __binding_cpu(void)
@@ -88,7 +90,14 @@ main(int argc, char* argv[])
 	
 	init_log(log_prefix, "./"); /* ≥ı ºªØlog */
 
-	__binding_cpu();
+	pool = worker_pool_new(10);
+	if (pool == NULL) {
+		log_error("worker pool new failed.");
+		return -1;
+	}
+
+		
+	//__binding_cpu();
 
 	L = lua_open();     /* initialize Lua */
     luaL_openlibs(L);   /* load Lua base libraries */
