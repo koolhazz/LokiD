@@ -16,7 +16,7 @@ struct worker_s {
 typedef struct worker_pool_s worker_pool_t;
 struct worker_pool_s {
 	unsigned int 	sz;
-	worker_t 		**pool;
+	worker_t 		**pool; // worker_t* pool[10];  hack struct worker_t* pool[0]
 };
 
 typedef void* (*worker_handler_t)(void*);
@@ -27,8 +27,5 @@ worker_pool_new(unsigned int sz = 2, workder_handler_t handler);
 extern worker_t*
 worker_new(worker_handler_t handler);
 
-
-
-extern 
 
 #endif
