@@ -1,4 +1,6 @@
 #include "worker.h"
+#include <stdlib.h>
+#include <string.h>
 
 static lua_State*
 __new_lua_state()
