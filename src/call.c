@@ -8,7 +8,7 @@
 #include <lauxlib.h>
 
 int 
-lua(lua_state* L, const char *func, const char *sig, ...) 
+lua(lua_State* L, const char *func, const char *sig, ...)
 {
     va_list vl;
     int narg, nres;   /* number of arguments and results */
