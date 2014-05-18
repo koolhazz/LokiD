@@ -87,8 +87,10 @@ __exec_lua(void* data)
 
 	int ret = 0;
 	if (lua("start", ">d", &ret)) { /* ½øÈë³ÌÐòÖ÷Ñ­»· */
-		return -1;
+		return (void*)-1;
 	}	
+
+	return (void*)0;
 }
 
 int
@@ -114,7 +116,7 @@ main(int argc, char* argv[])
 	}
 
 	for (unsigned int i = 0; i < 10; i++) {
-		pthread_join((*(pool->pool + i))->tid, NULL)
+		pthread_join((*(pool->pool + i))->tid, NULL);
 	}
 
 	return 0;
