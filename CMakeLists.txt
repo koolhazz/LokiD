@@ -5,7 +5,7 @@ project(LokiD CXX C)
 set(EXECUTABLE_OUTPUT_PATH bin)
 
 set(CMAKE_BUILD_TYPE DEBUG)
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 -Wall -stc=c99") # 设置编译选项
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -g -O2 -Wall -std=c99") # 设置编译选项
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O2 -Wall ")  # 设置 cxx编译选项
 
 set(SRC 
