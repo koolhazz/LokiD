@@ -1,5 +1,8 @@
 #include "tolua++.h"
 #include "log.h"
+#include "worker.h"
+#include "call.h"
+
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,8 +19,7 @@ extern "C"
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
-#include "call.h" 
-#include "worker.h"
+ 
 }
 
 /* Exported function */

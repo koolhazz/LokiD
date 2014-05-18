@@ -5,7 +5,13 @@
 #include <lualib.h>
 #include <lauxlib.h>
 #include <pthread.h>
+#include <sys/types.h>
+#include <unistd.h>
 
+#ifdef __cplusplus 
+extern "C" {
+#endif
+	
 typedef struct worker_s worker_t;
 struct worker_s {
 	lua_State 	*L;
@@ -22,10 +28,14 @@ struct worker_pool_s {
 typedef void* (*worker_handler_t)(void*);
 
 extern worker_pool_t*
-worker_pool_new(unsigned int sz = 2, workder_handler_t handler);
+worker_pool_new(unsigned int sz, workder_handler_t handler);
 
 extern worker_t*
 worker_new(worker_handler_t handler);
 
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif

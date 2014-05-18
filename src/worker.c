@@ -30,7 +30,7 @@ worker_new(worker_handler_t handler)
 }
 
 worker_pool_t*
-worker_pool_new(unsigned int sz, workder_handler_t handler)
+worker_pool_new(unsigned int sz, worker_handler_t handler)
 {
 	worker_pool_t* wp = malloc(sizeof *wp);
 	// hack struct worker_pool_t* wp = malloc(sizeof *wp + sizeof(worker_t*) * sz);
