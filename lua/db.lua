@@ -4,8 +4,13 @@ local config = require("lua/config")
 local utils = require("lua/utils")
 local logger = require("lua/logger")
 
+local __END__ 	= logger.__END__
+local __BEGIN__ = logger.__BEGIN__
+local __DEBUG__ = logger.__DEBUG__
+local __INFO__ 	= logger.__INFO__
+local __ERROR__ = logger.__ERROR__
+
 local mysql = mysql
-local log = log
 local table = table
 local G = _G
 
@@ -21,7 +26,7 @@ end
 function connect_mysql_svr()
     local l_ret = mysql.connect_mysql(config.MYSQL_CONF.m_host, config.MYSQL_CONF.m_user, config.MYSQL_CONF.m_password, config.MYSQL_CONF.m_db, config.MYSQL_CONF.m_port)
     if l_ret == -1 then 
-		logger.error("connect mysql failed")
+		__ERROR__("connect mysql failed")
 		return -1
 	end
 	
@@ -33,7 +38,7 @@ function query(in_s_query)
 end
 
 function update_user_money_and_exp_level_2(in_n_uid, in_n_money_change, in_biswinner, in_n_exp, in_n_level)
-	logger.debug("------ update_user_money_and_exp_level begin-----------")
+	__BEGIN__("update_user_money_and_exp_level_2")
 
 	local l_sql_table = {}
 	table.insert(l_sql_table,"UPDATE ks_membercash_info SET money=")
@@ -48,16 +53,16 @@ function update_user_money_and_exp_level_2(in_n_uid, in_n_money_change, in_biswi
 
 	local l_update_sql = table.concat(l_sql_table, nil)
 	
-	logger.debug("SQL: "..l_update_sql)
+	__DEBUG__("SQL: "..l_update_sql)
 
-	logger.debug("------ update_user_money_and_exp_level end -----------")
+	__END__("update_user_money_and_exp_level_2")
 
 	return mysql.query(l_update_sql)
 end
 
 -- add by Austin 2013-02-25
 function update_user_money_and_exp_level(in_n_uid, in_n_money_change, in_biswinner, in_n_exp, in_n_level)
-	logger.debug("------ update_user_money_and_exp_level begin-----------")
+	__BEGIN__("update_user_money_and_exp_level")
 
 	local l_sql_table = {}
 	table.insert(l_sql_table,"UPDATE ks_membercash_info SET money=")
@@ -72,9 +77,9 @@ function update_user_money_and_exp_level(in_n_uid, in_n_money_change, in_biswinn
 
 	local l_update_sql = table.concat(l_sql_table, nil)
 	
-	logger.debug("SQL: "..l_update_sql)
+	__END__("SQL: "..l_update_sql)
 
-	logger.debug("------ update_user_money_and_exp_level end -----------")
+	__END__("update_user_money_and_exp_level")
 
 	return mysql.query(l_update_sql)
 end
@@ -117,7 +122,7 @@ function set_player_join(in_n_user_id, in_n_table_id, in_n_server_id)
     
 	local l_ret = mysql.query(l_sql)
     
-	logger.debug("SQL: ".. l_sql)
+	__DEBUG__("SQL: ".. l_sql)
     
     if l_ret == -1 then
         return -1
@@ -127,19 +132,18 @@ function set_player_join(in_n_user_id, in_n_table_id, in_n_server_id)
 end
 
 function set_player_leave(in_n_user_id)
-	logger.debug("----------set_player_leave begin ----------------------------------------")
+	__BEGIN__("set_player_leave")
     -- local l_sql = "UPDATE ks_membertable SET tid=0,svid=0 WHERE mid="..in_n_uid
     local l_sql = "call p_upd_member_table("..in_n_user_id..", 0, 0)"
     
-    logger.debug("----------leave_table sql:"..l_sql)
 	local l_ret = mysql.query(l_sql)
 
-	logger.debug("SQL: ".. l_sql)
+	__DEBUG__("SQL: ".. l_sql)
 	
 	if l_ret == -1 then
         return -1
     end
-	logger.debug("----------set_player_leave end ----------------------------------------")
+	__END__("set_player_leave")
 
     return 0
 end
@@ -159,7 +163,7 @@ function get_user_info(in_n_uid)
 	local l_t_result_set = G["global_result_set"]
 	
 	if l_t_result_set == nil or l_t_result_set[1] == nil then
-		logger.debug(string.format("User %d is not found.", in_n_uid))
+		__DEBUG__(string.format("User %d is not found.", in_n_uid))
 		return 0, 0, 0, 0, 0, 0
 	end
 	
@@ -177,7 +181,7 @@ end
 function get_user_member_table(in_n_uid)
 	local l_sql = "select svid, tid from ks_membertable where mid = "..in_n_uid
 	
-	logger.debug("SQL: "..l_sql)
+	__DEBUG__("SQL: "..l_sql)
 
 	local l_ret = mysql.query(l_sql)
 
@@ -192,15 +196,15 @@ function get_user_member_table(in_n_uid)
 	-- end
 
 	if l_t_result_set == nil or l_t_result_set[1] == nil then
-		logger.debug("result is null.")
+		__DEBUG__("result is null.")
 		return 0, 0, 0
 	end
 	
 	local l_sid = l_t_result_set[1][1]
 	local l_tid = l_t_result_set[1][2]
 
-	logger.debug("l_sid: "..l_sid)
-	logger.debug("l_tid: "..l_tid)
+	__DEBUG__("l_sid: "..l_sid)
+	__DEBUG__("l_tid: "..l_tid)
 	
 	clear_global_result_set()
 
@@ -212,7 +216,7 @@ function user_off_line_insert_active(in_n_uid, in_n_active_time)
     
 	local l_ret = mysql.query(l_sql)
 
-	logger.debug("SQL: ".. l_sql)
+	__DEBUG__("SQL: ".. l_sql)
 	
 	if l_ret == -1 then
         return -1
@@ -226,7 +230,7 @@ function reset_member_online(in_n_sid)
 	
 	local l_ret = mysql.query(l_sql)
 
-	logger.debug("SQL: ".. l_sql)
+	__DEBUG__("SQL: ".. l_sql)
 	
 	if l_ret == -1 then
         return -1
@@ -236,19 +240,19 @@ function reset_member_online(in_n_sid)
 end
 
 function dec_user_interact_prop_num( in_n_pid )
-	logger.debug("----------dec_user_interact_prop_num begin -------------------- "..in_n_pid)
+	__BEGIN__("dec_user_interact_prop_num "..in_n_pid)
 
 	local l_sql = "UPDATE ks_memberprop SET pnum = pnum - 1 WHERE pid = in_n_pid"
 
 	local l_ret = mysql.query(l_sql)
 
-	logger.debug("SQL: "..l_sql)
+	__DEBUG__("SQL: "..l_sql)
 
 	if l_ret == -1 then
-		logger.debug("----------dec_user_interact_prop_num end1 --------------------")
+		__DEBUG__("----------dec_user_interact_prop_num end1 --------------------")
 		return -1
 	end
 
-	logger.debug("----------dec_user_interact_prop_num end --------------------")
+	__END__("dec_user_interact_prop_num")
 	return 0
 end

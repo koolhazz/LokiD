@@ -44,16 +44,16 @@ void init_log (const char *app, const char *dir, int max_num, int max_size)
         max_file_size = max_size;
 }
 
-void set_log_level(int l)
+void 
+set_log_level(int l)
 {
-    if(l>=0)
-        __log_level__ = l > 4 ? l : 4;
+    if(l>=0) __log_level__ = l > 4 ? l : 4;
 }
 
-void write_access(int access, const char* rsp_buf, const char* fmt, ...)
+void 
+write_access(int access, const char* rsp_buf, const char* fmt, ...)
 {
-    if (0 == access)
-        return;
+    if (0 == access) return;
 
     char  rspinfo[MAX_PATH_LEN] = {'\0'};
     int   rsplen                = 0;
@@ -106,7 +106,8 @@ void write_access(int access, const char* rsp_buf, const char* fmt, ...)
     }
 }
 
-void write_log (int level, const char *filename, const char *funcname, int lineno, const char *format, ...)
+void 
+write_log(int level, const char *filename, const char *funcname, int lineno, const char *format, ...)
 {
     if(is_daemon && level > __log_level__)  //守护进程并且该level不需要记录，则跳过
     {

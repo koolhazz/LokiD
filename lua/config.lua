@@ -6,14 +6,12 @@
 
 module(..., package.seeall)
 
-MYSQL_CONF = 
-{
-	m_host = "192.168.100.167",
-	m_port = 3388,
-	m_db = "kslave",
-	m_user = "root",
-	m_password = "",
-	
+MYSQL_CONF = {
+	m_host 		= "192.168.100.167",
+	m_port 		= 3388,
+	m_db 		= "kslave",
+	m_user 		= "root",
+	m_password 	= "",	
 }
 
 HALL_SVR_CONF = 

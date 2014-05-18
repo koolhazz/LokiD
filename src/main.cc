@@ -1,6 +1,5 @@
 #include "tolua++.h"
 #include "log.h"
-#include "mysql_part.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +16,8 @@ extern "C"
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
-#include "call.h"
+#include "call.h" 
+#include "worker.h"
 }
 
 /* Exported function */
@@ -25,7 +25,8 @@ TOLUA_API int
 tolua_export_open(lua_State* tolua_S);
 
 lua_State		*L;
-CMysql 			mysql_handle;
+worker_pool_t	*pool;
+bool 			is_daemon = true;
 
 static void 
 __binding_cpu(void)
@@ -72,7 +73,23 @@ __pidfile()
 	}
 }*/
 
-bool is_daemon = true;
+static void*
+__exec_lua(void* data)
+{
+	worker_t 	*w;
+	lua_State 	*L;
+
+	w = (worker_t*)data;
+	L = w->L;
+
+	tolua_export_open(L);
+    luaL_dofile(L, "lua/server.lua");    /* load the script */
+
+	int ret = 0;
+	if (lua("start", ">d", &ret)) { /* Â½Ã¸ÃˆÃ«Â³ÃŒÃÃ²Ã–Ã·Ã‘Â­Â»Â· */
+		return -1;
+	}	
+}
 
 int
 main(int argc, char* argv[])
@@ -88,19 +105,19 @@ main(int argc, char* argv[])
 	
 	snprintf(log_prefix, sizeof(log_prefix), "Log_%d", pid);
 	
-	init_log(log_prefix, "./"); /* ³õÊ¼»¯log */
+	init_log(log_prefix, "./"); /* Â³ÃµÃŠÂ¼Â»Â¯log */
 
-	__binding_cpu();
-
-	L = lua_open();     /* initialize Lua */
-    luaL_openlibs(L);   /* load Lua base libraries */
-    tolua_export_open(L);
-    luaL_dofile(L, "lua/server.lua");    /* load the script */
-
-	int ret = 0;
-	if (lua("start", ">d", &ret)) { /* ½øÈë³ÌÐòÖ÷Ñ­»· */
+	pool = worker_pool_new(10, __exec_lua);
+	if (pool == NULL) {
+		log_error("worker pool new failed.");
 		return -1;
 	}
+
+	for (unsigned int i = 0; i < 10; i++) {
+		pthread_join((*(pool->pool + i))->tid, NULL)
+	}
+
+	return 0;
 }
 
 

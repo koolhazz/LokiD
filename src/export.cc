@@ -1,5 +1,4 @@
 #include "export.h"
-#include "mysql_part.h"
 #include "log.h"
 
 extern "C"
@@ -10,23 +9,6 @@ extern "C"
 }
 
 extern lua_State	*L;
-extern CMysql		mysql_handle;
-
-int
-connect_mysql(const char* host,
-			  const char* user, 
-			  const char* password, 
-			  const char* dbname, 
-			  unsigned int port)
-{
-	return mysql_handle.connect_mysql(host, user, password, dbname, port);	
-}
-
-int
-query(const char* mysql)
-{
-	return mysql_handle.query(mysql);	
-}
 
 void 
 error(const char* msg)
