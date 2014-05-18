@@ -28,7 +28,7 @@ struct worker_pool_s {
 typedef void* (*worker_handler_t)(void*);
 
 extern worker_pool_t*
-worker_pool_new(unsigned int sz, workder_handler_t handler);
+worker_pool_new(unsigned int sz, worker_handler_t handler);
 
 extern worker_t*
 worker_new(worker_handler_t handler);

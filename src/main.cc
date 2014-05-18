@@ -88,7 +88,7 @@ __exec_lua(void* data)
     luaL_dofile(L, "lua/server.lua");    /* load the script */
 
 	int ret = 0;
-	if (lua("start", ">d", &ret)) { /* ½øÈë³ÌÐòÖ÷Ñ­»· */
+	if (lua(L, "start", ">d", &ret)) { /* ½øÈë³ÌÐòÖ÷Ñ­»· */
 		return (void*)-1;
 	}	
 
