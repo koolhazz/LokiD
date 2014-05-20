@@ -25,6 +25,20 @@ __new_worker(worker_handler_t handler)
 	return w;
 }
 
+/* 绑定线程绑定cpu */
+static void
+__affinity(worker_t* w, unsigned int n)
+{
+	unsigned int cps = sysconf(_SC_NPROCESSORS_ONLN);
+
+	cpu_set_t cpu;
+
+	CPU_ZERO(&cpu);
+	CPU_SET(n % cps, &cpu);
+
+	pthread_setaffinity_np(w->tid, sizeof cpu, &cpu);
+}
+
 worker_t*
 worker_new(worker_handler_t handler)
 {
@@ -46,7 +60,8 @@ worker_pool_new(unsigned int sz, worker_handler_t handler)
 	
 	for (unsigned int i = 0; i < sz; i++) {
 		*(wp->pool + i) = __new_worker(handler);
+		__affinity(*(wp->pool + i), i + 1);
 	}
-
+	
 	return wp;
 }

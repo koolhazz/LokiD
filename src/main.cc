@@ -84,6 +84,8 @@ __exec_lua(void* data)
 	w = (worker_t*)data;
 	L = w->L;
 
+	log_debug("thread: %d running...", w->tid);
+	
 	tolua_export_open(L);
     luaL_dofile(L, "lua/server.lua");    /* load the script */
 
