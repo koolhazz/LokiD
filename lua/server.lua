@@ -14,6 +14,7 @@ local concat = table.concat
 
 local __redis = nil
 local __mysql = nil
+local __tid = nil
 
 -- cache中获取用户的宝石数量
 local function __GetUserGem(in_n_userid)
@@ -33,14 +34,15 @@ end
 -- 回写用户宝石记录到数据库中
 local function __WriteUserGem(in_n_userid, in_n_gem)
 	local __sql = {"call p_upd_user_gem("}
-
+	
 	insert(__sql, in_n_userid)
 	insert(__sql, ", "..in_n_gem)
 	insert(__sql, ")")
 
 	local __temp = concat(__sql, nil)
-	logger.debug("SQL: "..__temp)
-
+	
+	logger.debug(string.format("W:[%d] SQL: %s", __tid, __temp));
+	
 	call(__mysql, __temp)
 end
 
@@ -53,24 +55,20 @@ local function __start()
 			local __result = __redis:LPOP("USER_GEM_Q")
 			
 			if __result then
-				logger.debug("UserID: "..__result)
-
 				local __gem = __GetUserGem(tonumber(__result))
 
-				logger.debug("gem: "..__gem)
-
-				if __gem > 0 then
-					__WriteUserGem(__result, __gem)			
-				end	
+				__WriteUserGem(__result, __gem)
 			else
-				stdlib.sleep(1)	
+				stdlib.usleep(100)
 			end
 		end
 	end
 end
 
-function start()
+function start(in_n_tid)
 	__mysql = connect()
+
+	__tid = in_n_tid
 
 	if __mysql then
 		log.debug("mysql connect success.")

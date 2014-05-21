@@ -2,4 +2,4 @@
 
 rm -f Log*
 
-bin/LokiD -v USER_GEM_Q
+bin/LokiD -v USER_GEM_Q MT

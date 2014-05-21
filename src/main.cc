@@ -12,6 +12,7 @@
 #include <time.h>
 #include <string.h>
 #include <fcntl.h>
+#include <errno.h>
 
 // using lua
 extern "C"
@@ -54,10 +55,10 @@ __binding_cpu(void)
 	sched_setaffinity(0,sizeof(cpu_set_t),&mask);	
 }
 
-/*static void
+static void
 __pidfile()
 {
-	int fd = open(PidPath, O_CREAT | O_RDWR, 00666);
+	int fd = open("server.pid", O_CREAT | O_RDWR, 00666);
 
 	if (fd <= 0) {
 		log_error("create pidfile failed.");
@@ -73,7 +74,7 @@ __pidfile()
 	if (ret <= 0) {
 		log_error("write pid failed. %d %d", ret, errno);
 	}
-}*/
+}
 
 static void*
 __exec_lua(void* data)
@@ -84,13 +85,13 @@ __exec_lua(void* data)
 	w = (worker_t*)data;
 	L = w->L;
 
-	log_debug("thread: %d running...", w->tid);
+	log_debug("thread: %lu running...", w->tid);
 	
 	tolua_export_open(L);
     luaL_dofile(L, "lua/server.lua");    /* load the script */
 
 	int ret = 0;
-	if (lua(L, "start", ">d", &ret)) { /* ½øÈë³ÌÐòÖ÷Ñ­»· */
+	if (lua(L, "start", "l>d", w->tid, &ret)) { /* ½øÈë³ÌÐòÖ÷Ñ­»· */
 		return (void*)-1;
 	}	
 
@@ -112,8 +113,10 @@ main(int argc, char* argv[])
 	snprintf(log_prefix, sizeof(log_prefix), "Log_%d", pid);
 	
 	init_log(log_prefix, "./"); /* ³õÊ¼»¯log */
-
-	pool = worker_pool_new(10, __exec_lua);
+	
+	__pidfile();
+	
+	pool = worker_pool_new(WORKERS, __exec_lua);
 	if (pool == NULL) {
 		log_error("worker pool new failed.");
 		return -1;

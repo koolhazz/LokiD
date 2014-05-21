@@ -20,27 +20,28 @@ lua(lua_State* L, const char *func, const char *sig, ...)
     narg = 0;
     while (*sig) {    /* push arguments */
 		switch (*sig++) {
- 
-		case 'f':  /* double argument */
-			lua_pushnumber(L, va_arg(vl, double));
-			break;
- 
-		case 'd':  /* int argument */
-			lua_pushnumber(L, va_arg(vl, int));
-            break;
- 
-        case 's':  /* string argument */
-            lua_pushstring(L, va_arg(vl, char *));
-            break;
-	
-        case '>':
-            goto endwhile;
- 
-        default:
-            {
-                log_error("invalid option (%c)", *(sig - 1));
-                return -1;
-            }
+			case 'f':  /* double argument */
+				lua_pushnumber(L, va_arg(vl, double));
+				break;
+				
+			case 'd':  /* int argument */
+				lua_pushnumber(L, va_arg(vl, int));
+				break;
+				
+			case 's':  /* string argument */
+				lua_pushstring(L, va_arg(vl, char*));
+				break;
+				
+			case 'l': 
+				lua_pushnumber(L, va_arg(vl, long));
+				break;
+			case '>':
+				goto endwhile;
+	 
+			default: {
+					log_error("invalid option (%c)", *(sig - 1));
+					return -1;
+				}
         }
         narg++;
         luaL_checkstack(L, 1, "too many arguments");
@@ -50,7 +51,7 @@ lua(lua_State* L, const char *func, const char *sig, ...)
     nres = strlen(sig);  /* number of expected results */
     if (lua_pcall(L, narg, nres, 0) != 0)  /* do the call */
     {
-        log_error( "error running function `%s': %s", func, lua_tostring(L, -1));
+        log_error( "error running function `%s': %s : %d", func, lua_tostring(L, -1), narg);
         return -1;
     }   
  
