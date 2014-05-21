@@ -21,5 +21,6 @@ include_directories(./inc /home/AustinChen/lib/include)
 link_directories(/home/AustinChen/lib /home/AustinChen/tools/luajit-2.0/src)
 
 add_executable(LokiD ${SRC})
+add_definitions(-DWORKERS=2)
 
 target_link_libraries(LokiD dl m pthread rt libtolua++.a libluajit-2.1.a)
