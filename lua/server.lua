@@ -53,9 +53,15 @@ local function __start()
 			local __result = __redis:LPOP("USER_GEM_Q")
 			
 			if __result then
+				logger.debug("UserID: "..__result)
+
 				local __gem = __GetUserGem(tonumber(__result))
 
-				__WriteUserGem(__result, __gem)			
+				logger.debug("gem: "..__gem)
+
+				if __gem > 0 then
+					__WriteUserGem(__result, __gem)			
+				end	
 			else
 				stdlib.sleep(1)	
 			end
