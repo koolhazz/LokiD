@@ -4,7 +4,11 @@
 #include <lua.h>
 #include <lualib.h>
 #include <lauxlib.h>
+#ifndef __USE_GNU
+#define __USE_GNU
+#endif
 #include <pthread.h>
+#include <sched.h>
 #include <sys/types.h>
 #include <unistd.h>
 
