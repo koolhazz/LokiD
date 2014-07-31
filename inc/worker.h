@@ -21,6 +21,7 @@ struct worker_s {
 	lua_State 	*L;
 	pthread_t 	tid;
 	pid_t		pid;
+	int			notify; /* 父线程通信句柄 */
 };
 
 typedef struct worker_pool_s worker_pool_t;
