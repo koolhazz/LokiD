@@ -15,13 +15,17 @@
 #ifdef __cplusplus 
 extern "C" {
 #endif
+
+typedef struct event_loop_s event_loop_t;
+struct event_loop_s;
 	
 typedef struct worker_s worker_t;
 struct worker_s {
-	lua_State 	*L;
-	pthread_t 	tid;
-	pid_t		pid;
-	int			notify; /* 父线程通信句柄 */
+	lua_State 		*L;
+	pthread_t 		tid;
+	pid_t			pid;
+	int				notify; /* 父线程通信句柄 */
+	event_loop_t* 	loop;
 };
 
 typedef struct worker_pool_s worker_pool_t;

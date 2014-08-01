@@ -12,6 +12,14 @@ enum conn_stat_t {
 	done; /* Ω” ‹ÕÍ±œ */	
 };
 
+typedef struct buffer_s buffer_t;
+struct buffer_s {
+	char 			*data;
+	unsigned int 	sz;
+	unsigned int 	idx;	
+};
+
+typedef struct connection_s connection_t;
 struct connection_s {
 	int 				fd;
 	unsigned int 		event;
@@ -21,5 +29,11 @@ struct connection_s {
 	conn_event_handle_t wh;
 	conn_stat_t			stat;
 };
+
+connection_t*
+connection_new(int fd, unsigned int bs);
+
+int
+connection_free(connection_t* c);
 
 #endif
